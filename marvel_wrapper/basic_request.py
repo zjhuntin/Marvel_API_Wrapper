@@ -17,40 +17,31 @@ class MarvelRequest():
         time_stamp = str(datetime.now().microsecond * randint(1, 1000000000))
         hash_object = hashlib.md5(bytes(time_stamp+self._PRIVATE_KEY+self._PUBLIC_KEY, 'utf-8'))
         _hash = hash_object.hexdigest()
-        payload = {'hash': _hash, 'apikey': self._PUBLIC_KEY, 'ts': time_stamp}
-        auth_params = 'ts={ts}&apikey={apikey}&hash={hash}'.format(**payload)
-        return auth_params
+        auth_dict = {'hash': _hash, 'apikey': self._PUBLIC_KEY, 'ts': time_stamp}
+        return auth_dict
 
     def request_character(self, name='', starts_with='', modified_since='',
                           comics='', series='', events='', stories='',
                           order_by='', limit='', offset=''):
 
-        char_url = '/public/characters?'
+        char_url = self.start_url + '/public/characters'
 
-        order_by_choices = ['name', 'modified', '-name','-modified']
+        order_by_choices = ['', 'name', 'modified', '-name','-modified']
 
-        params = [('name', name), ('starts_with', starts_with),
-                  ('modified_since', modified_since), ('comics', comics),
-                  ('series', series), ('events', events), ('stories', stories),
-                  ('order_by', order_by), ('limit', limit), ('offset', offset)]
+        if order_by not in order_by_choices:
+            return('You can only order by name, modified, -name, and \
+            -modified.\n')
 
-        params = OrderedDict(params)
+        payload = {'name': name, 'starts_with': starts_with,
+                  'modified_since': modified_since, 'comics': comics,
+                  'series': series, 'events': events, 'stories': stories,
+                  'order_by': order_by, 'limit': limit, 'offset': offset}
 
-        search_params = []
-        for key in params.keys():
-            if params[key] != '':
-                if key == 'order_by':
-                    if params[key] not in order_by_choices:
-                        return('You can only order by name, modified, -name,\
-                                and -modified.\n')
-                if len(search_params) == 0:
-                    search_params.append(key + '=' + params[key])
-                else:
-                    search_params.append('&' + key + '=' + params[key])
+        payload = {key: value for key, value in payload.items() if value != ''}
 
-        full_url = self.start_url + char_url + ''.join(search_params) + '&' + self.authorize_request()
+        payload.update(self.authorize_request())
 
-        char_request = requests.get(full_url)
+        char_request = requests.get(char_url, params=payload)
 
         return char_request
 
