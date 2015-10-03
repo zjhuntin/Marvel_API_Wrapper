@@ -29,7 +29,7 @@ class MarvelRequest():
 
     def make_request(self, url, params):
         '''Returns an authorized request object made with the parameters given.'''
-        params.update(self.authorize_rqeuest())
+        params.update(self.authorize_request())
         request = requests.get(url, params=params)
         return request
 
