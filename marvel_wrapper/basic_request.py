@@ -63,7 +63,7 @@ class MarvelRequest():
                   series = series, events = events, stories = stories,
                   order_by = order_by, limit = limit, offset = offset)
 
-        char_request = make_request(char_url, payload)
+        char_request = self.make_request(char_url, payload)
 
         return char_request
 
