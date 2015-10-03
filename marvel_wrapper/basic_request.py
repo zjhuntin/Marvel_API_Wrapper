@@ -67,6 +67,13 @@ class MarvelRequest():
 
         return char_request
 
+    def character_info(self, name=''):
+      req = self.request_character(name=name)
+      character_id = req.json()['data']['results'][0]['id']
+      payload = {id: character_id}
+      character_url = self.start_url +'/public/characters/' + str(character_id)
+      return self.make_request(character_url, payload)
+
     # def comic_request(self format='', format_type='', no_variants='',
     #                   date_descriptor='', date_range='', title=''
     #                   title_starts_with='', start_year='', issue_number=''
