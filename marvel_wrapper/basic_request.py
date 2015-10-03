@@ -8,8 +8,8 @@ from random import randint
 class MarvelRequest():
 
     def __init__(self):
-        self._PUBLIC_KEY = os.environ['PUBLIC_KEY']
-        self._PRIVATE_KEY = os.environ['PRIVATE_KEY']
+        self._PUBLIC_KEY = os.environ['MARVEL_PUBLIC_KEY']
+        self._PRIVATE_KEY = os.environ['MARVEL_PRIVATE_KEY']
         self.start_url = 'http://gateway.marvel.com/v1'
 
     def authorize_request(self):
